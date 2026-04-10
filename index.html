@@ -138,6 +138,22 @@
     @media (max-height: 500px) {
       canvas#wheel { width: min(70vw, 80vh, 700px); height: min(70vw, 80vh, 700px); }
     }
+
+    /* ── Countdown ── */
+    #countdown {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-family: "Barriecito", system-ui;
+      font-size: clamp(8rem, 22vmin, 16rem);
+      color: var(--accent, #a78bfa);
+      -webkit-text-stroke: 4px #000;
+      z-index: 50;
+      pointer-events: none;
+    }
+    #countdown.active { display: flex; }
   </style>
 </head>
 <body>
@@ -154,6 +170,9 @@
 
     </div>
   </div>
+
+  <!-- Countdown -->
+  <div id="countdown"></div>
 
   <!-- Winner overlay -->
   <div class="overlay" id="overlay">
@@ -195,7 +214,8 @@
     const ctx      = canvas.getContext('2d');
     const pointer  = document.getElementById('pointer');
     const spinBtn  = document.getElementById('spinBtn');
-    const overlay     = document.getElementById('overlay');
+    const overlay      = document.getElementById('overlay');
+    const countdown    = document.getElementById('countdown');
     const overlayContent = document.getElementById('overlayContent');
     const overlayName    = document.getElementById('overlayName');
 
@@ -350,13 +370,47 @@
     // ── Spin state ──
     let spinning = false;
 
-    // ── Spin ──
+    // ── Countdown then spin ──
+    function runCountdown(callback) {
+      const nums = ['3', '2', '1'];
+      let i = 0;
+
+      function showNext() {
+        if (i >= nums.length) {
+          countdown.classList.remove('active');
+          countdown.textContent = '';
+          callback();
+          return;
+        }
+        countdown.textContent = nums[i];
+        countdown.classList.add('active');
+        gsap.fromTo(countdown,
+          { scale: 1.6, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.25, ease: 'back.out(1.4)',
+            onComplete() {
+              setTimeout(() => {
+                gsap.to(countdown, { opacity: 0, duration: 0.2,
+                  onComplete() { i++; showNext(); }
+                });
+              }, 550);
+            }
+          }
+        );
+      }
+
+      showNext();
+    }
+
     function spin() {
       if (spinning) return;
       spinning = true;
       spinBtn.disabled = true;
       initAudio(); // must be called from a user-gesture handler
 
+      runCountdown(startSpin);
+    }
+
+    function startSpin() {
       const { segments, minSpins, maxSpins, spinDuration, spinDirection } = CONFIG;
       const N         = segments.length;
       const segAngle  = (2 * Math.PI) / N;
