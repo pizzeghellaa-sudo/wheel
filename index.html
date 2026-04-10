@@ -42,27 +42,19 @@
       /* color set randomly via JS on load */
     }
 
-    /* ── Game row: wheel centered, winner panel on the right ── */
+    /* ── Game row: wheel centered ── */
     .game {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      display: flex;
+      justify-content: center;
       width: 100%;
-      align-items: center;
     }
 
-    /* ── Wheel column — sits in the center auto column ── */
+    /* ── Wheel column ── */
     .wheel-section {
-      grid-column: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0;
-    }
-
-    /* ── Winner panel — anchored to the right of center ── */
-    .winner-panel {
-      grid-column: 3;
-      justify-self: end;
     }
 
     /* ── Pointer triangle ── */
@@ -76,9 +68,8 @@
 
     canvas#wheel {
       display: block;
-      /* fits both viewport width (leaving room for winner panel) and height */
-      width:  min(54vw, 68vh, 700px);
-      height: min(54vw, 68vh, 700px);
+      width:  min(80vw, 72vh, 700px);
+      height: min(80vw, 72vh, 700px);
     }
 
     /* ── Spin button ── */
@@ -98,24 +89,6 @@
     #spinBtn:hover:not(:disabled) { background: #6d28d9; }
     #spinBtn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* ── Winner panel ── */
-    .winner-panel {
-      width: clamp(100px, 14vw, 200px);
-      min-height: clamp(70px, 10vw, 130px);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #2a2a4e;
-      transition: background 0.4s;
-      margin-left: clamp(12px, 2vw, 28px);
-    }
-    #winnerName {
-      font-family: "Barriecito", system-ui;
-      font-size: clamp(1rem, 2.5vw, 1.8rem);
-      font-weight: 400;
-      transition: color 0.4s;
-    }
 
     /* ── Winner overlay ── */
     .overlay {
@@ -163,8 +136,6 @@
         gap: 16px;
       }
       canvas#wheel { width: min(88vw, 60vh, 700px); height: min(88vw, 60vh, 700px); }
-      .winner-panel { grid-column: unset; justify-self: unset; margin-left: 0; width: clamp(120px, 50vw, 200px); min-height: 70px; }
-      #winnerName { font-size: clamp(1rem, 5vw, 1.5rem); }
     }
   </style>
 </head>
@@ -178,10 +149,6 @@
         <div class="pointer" id="pointer"></div>
         <canvas id="wheel" width="700" height="700"></canvas>
         <button id="spinBtn">SPIN!</button>
-      </div>
-
-      <div class="winner-panel" id="winnerPanel">
-        <span id="winnerName">?</span>
       </div>
 
     </div>
@@ -227,8 +194,6 @@
     const ctx      = canvas.getContext('2d');
     const pointer  = document.getElementById('pointer');
     const spinBtn  = document.getElementById('spinBtn');
-    const winnerPanel = document.getElementById('winnerPanel');
-    const winnerName  = document.getElementById('winnerName');
     const overlay     = document.getElementById('overlay');
     const overlayContent = document.getElementById('overlayContent');
     const overlayName    = document.getElementById('overlayName');
@@ -460,12 +425,7 @@
     function showWinner(index) {
       const seg = CONFIG.segments[index];
 
-      // 1. Update winner panel (right side box)
-      winnerPanel.style.background = seg.color;
-      winnerName.style.color = seg.textColor;
-      winnerName.textContent = seg.label;
-
-      // 2. Populate overlay name card with segment colors
+      // 1. Populate overlay name card with segment colors
       overlayName.textContent = seg.label;
       overlayName.style.background = seg.color;
       overlayName.style.color = seg.textColor;
