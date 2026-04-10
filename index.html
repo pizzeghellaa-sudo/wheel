@@ -160,7 +160,7 @@
 <body>
 
   <div class="page">
-    <h1>Wheel of Fortune</h1>
+    <h1 id="pageTitle">Wheel of Fortune</h1>
     <div class="game">
 
       <div class="wheel-section">
@@ -219,6 +219,11 @@
     const overlay     = document.getElementById('overlay');
     const overlayContent = document.getElementById('overlayContent');
     const overlayName    = document.getElementById('overlayName');
+
+    // Set page title with current date (M/D/YYYY)
+    const _d = new Date();
+    document.getElementById('pageTitle').textContent =
+      `Wheel of Fortune of ${_d.getMonth() + 1}/${_d.getDate()}/${_d.getFullYear()}`;
 
     // Apply pointer color from CONFIG
     pointer.style.backgroundColor = CONFIG.pointerColor;
