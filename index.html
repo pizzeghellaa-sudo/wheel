@@ -240,6 +240,12 @@
     // Apply pointer color from CONFIG
     pointer.style.backgroundColor = CONFIG.pointerColor;
 
+    // ── Shuffle segments (Fisher-Yates) so positions are random each load ──
+    for (let i = CONFIG.segments.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [CONFIG.segments[i], CONFIG.segments[j]] = [CONFIG.segments[j], CONFIG.segments[i]];
+    }
+
     // ── Wheel state ──
     let currentAngle = 0;
 
