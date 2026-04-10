@@ -197,6 +197,7 @@
         { label: 'Joao',    color: '#86efac', textColor: '#1a1a2e' },
         { label: 'Matheus', color: '#f87171', textColor: '#ffffff' },
         { label: 'Robson',  color: '#818cf8', textColor: '#ffffff' },
+        { label: 'Marco',   color: '#f9a8d4', textColor: '#1a1a2e' },
         { label: 'Qazi',    color: '#d1a0a0', textColor: '#1a1a2e' },
         { label: 'Fellipe', color: '#84a98c', textColor: '#ffffff' },
       ],
@@ -416,13 +417,21 @@
         onComplete() {
           currentAngle = targetAngle;
           spinning = false;
+          spinBtn.textContent = 'RESET';
+          spinBtn.dataset.mode = 'reset';
           spinBtn.disabled = false;
           showWinner(winnerIndex);
         },
       });
     }
 
-    spinBtn.addEventListener('click', spin);
+    spinBtn.addEventListener('click', () => {
+      if (spinBtn.dataset.mode === 'reset') {
+        location.reload();
+      } else {
+        spin();
+      }
+    });
 
     // ── Winner effect ──
     let dismissTimer = null;
@@ -453,7 +462,7 @@
 
       // 5. Auto-dismiss after 4 seconds
       if (dismissTimer) clearTimeout(dismissTimer);
-      dismissTimer = setTimeout(dismissOverlay, 4000);
+      dismissTimer = setTimeout(dismissOverlay, 6000);
     }
 
     function dismissOverlay() {
