@@ -20,12 +20,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: auto;
     }
 
     .page {
       width: 100%;
-      max-width: 900px;
-      padding: 24px 16px;
+      max-width: 1100px;
+      padding: 8px 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -35,9 +36,9 @@
     h1 {
       font-family: "Barriecito", system-ui;
       font-weight: 400;
-      font-size: 3rem;
+      font-size: clamp(1.4rem, 4vmin, 3rem);
       letter-spacing: 2px;
-      margin-bottom: 50px;
+      margin-bottom: clamp(12px, 3vmin, 50px);
       /* color set randomly via JS on load */
     }
 
@@ -75,12 +76,14 @@
 
     canvas#wheel {
       display: block;
-      max-width: 100%;
+      /* fits both viewport width (leaving room for winner panel) and height */
+      width:  min(54vw, 68vh, 700px);
+      height: min(54vw, 68vh, 700px);
     }
 
     /* ── Spin button ── */
     #spinBtn {
-      margin-top: 24px;
+      margin-top: clamp(16px, 4vmin, 48px);
       padding: 12px 36px;
       border: none;
       border-radius: 999px;
@@ -97,19 +100,19 @@
 
     /* ── Winner panel ── */
     .winner-panel {
-      width: 180px;
-      min-height: 100px;
+      width: clamp(100px, 14vw, 200px);
+      min-height: clamp(70px, 10vw, 130px);
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: #2a2a4e;
       transition: background 0.4s;
-      margin-left: 24px;
+      margin-left: clamp(12px, 2vw, 28px);
     }
     #winnerName {
       font-family: "Barriecito", system-ui;
-      font-size: 1.8rem;
+      font-size: clamp(1rem, 2.5vw, 1.8rem);
       font-weight: 400;
       transition: color 0.4s;
     }
@@ -135,19 +138,19 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 24px;
       transform: scale(0);
     }
     .overlay-name {
       font-family: "Barriecito", system-ui;
-      font-size: 4rem;
+      font-size: clamp(4rem, 12vw, 9rem);
       font-weight: 400;
-      padding: 16px 40px;
-      border-radius: 16px;
+      padding: clamp(24px, 4vw, 40px) clamp(48px, 8vw, 90px);
+      border-radius: 24px;
       /* background and color set from winner segment via JS */
     }
     .overlay-label {
-      font-size: 1.4rem;
+      font-size: clamp(1.4rem, 3vw, 2.4rem);
       color: #fde68a;
     }
 
@@ -157,11 +160,11 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 24px;
+        gap: 16px;
       }
-      .winner-panel { grid-column: unset; justify-self: unset; margin-left: 0; width: 140px; min-height: 80px; }
-      canvas#wheel { width: 300px; height: 300px; }
-      #winnerName { font-size: 1.3rem; }
+      canvas#wheel { width: min(88vw, 60vh, 700px); height: min(88vw, 60vh, 700px); }
+      .winner-panel { grid-column: unset; justify-self: unset; margin-left: 0; width: clamp(120px, 50vw, 200px); min-height: 70px; }
+      #winnerName { font-size: clamp(1rem, 5vw, 1.5rem); }
     }
   </style>
 </head>
@@ -173,7 +176,7 @@
 
       <div class="wheel-section">
         <div class="pointer" id="pointer"></div>
-        <canvas id="wheel" width="500" height="500"></canvas>
+        <canvas id="wheel" width="700" height="700"></canvas>
         <button id="spinBtn">SPIN!</button>
       </div>
 
