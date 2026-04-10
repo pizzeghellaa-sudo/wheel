@@ -265,6 +265,73 @@
 
     // Draw initial static wheel
     drawWheel(currentAngle);
+
+    // ── Spin state ──
+    let spinning = false;
+
+    // ── Spin ──
+    function spin() {
+      if (spinning) return;
+      spinning = true;
+      spinBtn.disabled = true;
+
+      const { segments, minSpins, maxSpins, spinDuration, spinDirection } = CONFIG;
+      const N         = segments.length;
+      const segAngle  = (2 * Math.PI) / N;
+      const direction = spinDirection === 'clockwise' ? 1 : -1;
+
+      // Pick winner before animation starts
+      const winnerIndex  = Math.floor(Math.random() * N);
+      // Angle of winner segment's center in wheel's local frame (before rotation)
+      const winnerCenter = winnerIndex * segAngle + segAngle / 2;
+
+      // The wheel is drawn so that each segment i starts at:
+      //   angle + i*segAngle - π/2
+      // So segment i's center is at: angle + i*segAngle - π/2 + segAngle/2
+      // We want this to equal 0 (top, 12 o'clock) for the winner:
+      //   finalAngle + winnerCenter - π/2 = 0  →  finalAngle = π/2 - winnerCenter
+      const finalAngleBase = Math.PI / 2 - winnerCenter;
+
+      // Random number of full rotations in [minSpins, maxSpins)
+      const fullSpins = Math.floor(minSpins + Math.random() * (maxSpins - minSpins));
+
+      // Extra rotation beyond full spins to land exactly on winner
+      let extra;
+      if (direction === 1) {
+        // Clockwise (positive): extra must be in [0, 2π)
+        extra = mod(finalAngleBase - mod(currentAngle, 2 * Math.PI), 2 * Math.PI);
+      } else {
+        // Counter-clockwise (negative): extra must be in [0, 2π), then subtract
+        extra = mod(mod(currentAngle, 2 * Math.PI) - finalAngleBase, 2 * Math.PI);
+      }
+
+      const targetAngle = currentAngle + direction * (fullSpins * 2 * Math.PI) + direction * extra;
+
+      // GSAP tween via proxy object
+      const proxy = { val: currentAngle };
+      gsap.to(proxy, {
+        val:      targetAngle,
+        duration: spinDuration,
+        ease:     'power4.out',
+        onUpdate() {
+          currentAngle = proxy.val;
+          drawWheel(currentAngle);
+        },
+        onComplete() {
+          currentAngle = targetAngle;
+          spinning = false;
+          spinBtn.disabled = false;
+          showWinner(winnerIndex);
+        },
+      });
+    }
+
+    spinBtn.addEventListener('click', spin);
+
+    // Temporary stub — replaced in Task 5
+    function showWinner(index) {
+      console.log('Winner:', CONFIG.segments[index].label);
+    }
   </script>
 </body>
 </html>
