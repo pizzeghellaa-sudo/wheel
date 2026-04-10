@@ -9,7 +9,12 @@
       "Bash(node:*)",
       "mcp__plugin_playwright_playwright__browser_navigate",
       "mcp__plugin_playwright_playwright__browser_console_messages",
-      "mcp__plugin_playwright_playwright__browser_take_screenshot"
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_tabs",
+      "Bash(npx playwright:*)",
+      "Bash(npm install:*)",
+      "Bash(rm test-spin.mjs)",
+      "Bash(rm -rf node_modules package.json package-lock.json)"
     ]
   }
 }

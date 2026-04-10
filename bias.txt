@@ -1,0 +1,75 @@
+Wheel of Fortune — Spin Bias Test
+Date: 2026-04-10T08:49:04.578Z
+URL:  https://wheel-sand.vercel.app/
+Spins: 30   Segments: 9   Expected wins each: 3.33
+
+Shuffled segment order on wheel (slot 0 = first segment clockwise from top):
+  slot 0: Robson
+  slot 1: Fellipe
+  slot 2: Matheus
+  slot 3: Jason
+  slot 4: Andy
+  slot 5: Joao
+  slot 6: Marco
+  slot 7: Qazi
+  slot 8: Petro
+
+────────────────────────────────────────────────────
+Spin-by-spin results:
+────────────────────────────────────────────────────
+  Spin  1: winner = Andy       (slot 4)
+  Spin  2: winner = Joao       (slot 5)
+  Spin  3: winner = Matheus    (slot 2)
+  Spin  4: winner = Petro      (slot 8)
+  Spin  5: winner = Matheus    (slot 2)
+  Spin  6: winner = Robson     (slot 0)
+  Spin  7: winner = Marco      (slot 6)
+  Spin  8: winner = Petro      (slot 8)
+  Spin  9: winner = Jason      (slot 3)
+  Spin 10: winner = Qazi       (slot 7)
+  Spin 11: winner = Fellipe    (slot 1)
+  Spin 12: winner = Marco      (slot 6)
+  Spin 13: winner = Marco      (slot 6)
+  Spin 14: winner = Qazi       (slot 7)
+  Spin 15: winner = Andy       (slot 4)
+  Spin 16: winner = Jason      (slot 3)
+  Spin 17: winner = Andy       (slot 4)
+  Spin 18: winner = Fellipe    (slot 1)
+  Spin 19: winner = Fellipe    (slot 1)
+  Spin 20: winner = Matheus    (slot 2)
+  Spin 21: winner = Petro      (slot 8)
+  Spin 22: winner = Petro      (slot 8)
+  Spin 23: winner = Qazi       (slot 7)
+  Spin 24: winner = Fellipe    (slot 1)
+  Spin 25: winner = Petro      (slot 8)
+  Spin 26: winner = Robson     (slot 0)
+  Spin 27: winner = Fellipe    (slot 1)
+  Spin 28: winner = Joao       (slot 5)
+  Spin 29: winner = Matheus    (slot 2)
+  Spin 30: winner = Matheus    (slot 2)
+
+Wins per person (expected ≈ 3.3 each):
+  Matheus     5x  █████
+  Petro       5x  █████
+  Fellipe     5x  █████
+  Andy        3x  ███
+  Marco       3x  ███
+  Qazi        3x  ███
+  Joao        2x  ██
+  Robson      2x  ██
+  Jason       2x  ██
+
+Wins per slot index (expected ≈ 3.3 each):
+  slot 0 (Robson    )  2x  ██
+  slot 1 (Fellipe   )  5x  █████
+  slot 2 (Matheus   )  5x  █████
+  slot 3 (Jason     )  2x  ██
+  slot 4 (Andy      )  3x  ███
+  slot 5 (Joao      )  2x  ██
+  slot 6 (Marco     )  3x  ███
+  slot 7 (Qazi      )  3x  ███
+  slot 8 (Petro     )  5x  █████
+
+Chi-square statistic: 4.200 (df=8)
+Critical value at p=0.05, df=8: 15.507
+✅ No significant bias detected — distribution is consistent with uniform random selection.
