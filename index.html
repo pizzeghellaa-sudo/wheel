@@ -361,6 +361,7 @@
 
     function dismissOverlay() {
       if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = null; }
+      gsap.killTweensOf(overlayContent);
       gsap.to(overlayContent, {
         scale: 0,
         opacity: 0,
