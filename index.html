@@ -37,7 +37,7 @@
       font-weight: 400;
       font-size: 3rem;
       letter-spacing: 2px;
-      margin-bottom: 32px;
+      margin-bottom: 50px;
       /* color set randomly via JS on load */
     }
 
@@ -108,8 +108,9 @@
       margin-left: 24px;
     }
     #winnerName {
+      font-family: "Barriecito", system-ui;
       font-size: 1.8rem;
-      font-weight: 700;
+      font-weight: 400;
       transition: color 0.4s;
     }
 
@@ -138,8 +139,9 @@
       transform: scale(0);
     }
     .overlay-name {
+      font-family: "Barriecito", system-ui;
       font-size: 4rem;
-      font-weight: 900;
+      font-weight: 400;
       padding: 16px 40px;
       border-radius: 16px;
       /* background and color set from winner segment via JS */
@@ -357,8 +359,8 @@
         ctx.fillStyle = seg.textColor;
         // Font size: fraction of arc width at 70% radius, clamped 10–24px
         const arcWidth = 2 * (radius * 0.7) * Math.sin(segAngle / 2);
-        const fontSize = Math.max(10, Math.min(24, arcWidth * 0.45));
-        ctx.font = `bold ${fontSize}px 'Segoe UI', sans-serif`;
+        const fontSize = Math.max(12, Math.min(32, arcWidth * 0.58));
+        ctx.font = `${fontSize}px 'Barriecito', system-ui`;
         ctx.fillText(seg.label, radius - 12, 0);
         ctx.restore();
       });
@@ -370,8 +372,8 @@
       ctx.fill();
     }
 
-    // Draw initial static wheel
-    drawWheel(currentAngle);
+    // Draw initial static wheel — wait for fonts so Barriecito is ready on canvas
+    document.fonts.ready.then(() => drawWheel(currentAngle));
 
     // ── Spin state ──
     let spinning = false;
