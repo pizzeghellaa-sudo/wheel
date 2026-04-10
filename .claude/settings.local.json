@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash:*)",
+      "Bash(git -C \"C:/Data/Developers/wheel\" log --oneline)",
+      "Bash(echo \"exit:$?\")"
+    ]
+  }
+}
