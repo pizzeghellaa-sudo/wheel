@@ -287,12 +287,10 @@
       // Angle of winner segment's center in wheel's local frame (before rotation)
       const winnerCenter = winnerIndex * segAngle + segAngle / 2;
 
-      // The wheel is drawn so that each segment i starts at:
-      //   angle + i*segAngle - π/2
-      // So segment i's center is at: angle + i*segAngle - π/2 + segAngle/2
-      // We want this to equal 0 (top, 12 o'clock) for the winner:
-      //   finalAngle + winnerCenter - π/2 = 0  →  finalAngle = π/2 - winnerCenter
-      const finalAngleBase = Math.PI / 2 - winnerCenter;
+      // The wheel draws segment i centered at: angle + i*segAngle - π/2 + segAngle/2
+      // Pointer is at 12 o'clock = canvas angle -π/2. For winner to land there:
+      //   angle + winnerCenter - π/2 = -π/2  →  angle = -winnerCenter
+      const finalAngleBase = -winnerCenter;
 
       // Random number of full rotations in [minSpins, maxSpins)
       const fullSpins = Math.floor(minSpins + Math.random() * (maxSpins - minSpins));
