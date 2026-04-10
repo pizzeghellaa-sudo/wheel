@@ -208,7 +208,7 @@
     document.getElementById('pageTitle').style.color = `hsl(${_hue}, 90%, 72%)`;
 
     // Apply pointer color from CONFIG
-    pointer.style.backgroundColor = CONFIG.pointerColor;
+    pointer.style.backgroundColor = `hsl(${_hue}, 90%, 72%)`;
 
     // ── Shuffle segments (Fisher-Yates) so positions are random each load ──
     for (let i = CONFIG.segments.length - 1; i > 0; i--) {
