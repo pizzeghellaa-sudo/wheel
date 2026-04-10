@@ -187,11 +187,12 @@
         { label: 'Qazi',    color: '#d1a0a0', textColor: '#1a1a2e' },
         { label: 'Fellipe', color: '#84a98c', textColor: '#ffffff' },
       ],
-      minSpins:      5,            // minimum full rotations before stopping
-      maxSpins:      10,           // maximum full rotations
-      spinDuration:  4,            // seconds for the spin animation
-      pointerColor:  '#000000',    // color of the pointer triangle
+      minSpins:      20,            // minimum full rotations before stopping
+      maxSpins:      30,           // maximum full rotations
+      spinDuration:  6,            // seconds for the spin animation
+      pointerColor:  '#888888',    // color of the pointer triangle
       spinDirection: 'clockwise',  // 'clockwise' or 'counter-clockwise'
+      tickSound:     true,         // play a ratchet tick sound while spinning
     };
     // ─────────────────────────────────────────────
 
@@ -214,6 +215,46 @@
 
     // ── Helper: positive modulo ──
     function mod(a, n) { return ((a % n) + n) % n; }
+
+    // ── Tick sound (Web Audio API) ──
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playTick() {
+      if (!audioCtx || !CONFIG.tickSound) return;
+      const now = audioCtx.currentTime;
+
+      // Short noise burst with exponential decay — sounds like a ratchet click
+      const bufferSize = Math.floor(audioCtx.sampleRate * 0.015); // 15 ms
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.2));
+      }
+
+      const source = audioCtx.createBufferSource();
+      source.buffer = buffer;
+
+      // Bandpass filter shapes the noise into a crisp click
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 1000;
+      filter.Q.value = 1.0;
+
+      const gainNode = audioCtx.createGain();
+      gainNode.gain.value = 0.4;
+
+      source.connect(filter);
+      filter.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      source.start(now);
+    }
 
     // ── Draw the wheel at a given rotation angle (radians) ──
     function drawWheel(angle) {
@@ -276,6 +317,7 @@
       if (spinning) return;
       spinning = true;
       spinBtn.disabled = true;
+      initAudio(); // must be called from a user-gesture handler
 
       const { segments, minSpins, maxSpins, spinDuration, spinDirection } = CONFIG;
       const N         = segments.length;
@@ -309,6 +351,7 @@
 
       // GSAP tween via proxy object
       const proxy = { val: currentAngle };
+      let lastSegIndex = -1;
       gsap.to(proxy, {
         val:      targetAngle,
         duration: spinDuration,
@@ -316,6 +359,12 @@
         onUpdate() {
           currentAngle = proxy.val;
           drawWheel(currentAngle);
+          // Fire a tick each time the angle crosses a segment boundary
+          const segIdx = Math.floor(mod(currentAngle, 2 * Math.PI) / segAngle);
+          if (segIdx !== lastSegIndex) {
+            lastSegIndex = segIdx;
+            playTick();
+          }
         },
         onComplete() {
           currentAngle = targetAngle;
