@@ -35,21 +35,27 @@
       color: #e0d7ff;
     }
 
-    /* ── Game row: wheel + winner panel ── */
+    /* ── Game row: wheel centered, winner panel on the right ── */
     .game {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      width: 100%;
       align-items: center;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
     }
 
-    /* ── Wheel column ── */
+    /* ── Wheel column — sits in the center auto column ── */
     .wheel-section {
+      grid-column: 2;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0;
+    }
+
+    /* ── Winner panel — anchored to the right of center ── */
+    .winner-panel {
+      grid-column: 3;
+      justify-self: end;
     }
 
     /* ── Pointer triangle ── */
@@ -93,6 +99,7 @@
       justify-content: center;
       background: #2a2a4e;
       transition: background 0.4s;
+      margin-left: 24px;
     }
     #winnerName {
       font-size: 1.8rem;
@@ -138,8 +145,14 @@
 
     /* ── Responsive ── */
     @media (max-width: 600px) {
+      .game {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+      .winner-panel { grid-column: unset; justify-self: unset; margin-left: 0; width: 140px; min-height: 80px; }
       canvas#wheel { width: 300px; height: 300px; }
-      .winner-panel { width: 140px; min-height: 80px; }
       #winnerName { font-size: 1.3rem; }
     }
   </style>
