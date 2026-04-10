@@ -206,6 +206,7 @@
       pointerColor:  '#888888',    // color of the pointer triangle
       spinDirection: 'clockwise',  // 'clockwise' or 'counter-clockwise'
       tickSound:     true,         // play a ratchet tick sound while spinning
+      tadaSound:     true,         // play a ta-da fanfare when the winner is revealed
     };
     // ─────────────────────────────────────────────
 
@@ -272,6 +273,34 @@
       filter.connect(gainNode);
       gainNode.connect(audioCtx.destination);
       source.start(now);
+    }
+
+    function playTada() {
+      if (!audioCtx || !CONFIG.tadaSound) return;
+      const now = audioCtx.currentTime;
+
+      function playNote(freq, startTime, duration, volume) {
+        const osc  = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        // Attack → sustain → release envelope
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(volume, startTime + 0.02);
+        gain.gain.linearRampToValueAtTime(volume * 0.75, startTime + duration * 0.6);
+        gain.gain.linearRampToValueAtTime(0, startTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + duration);
+      }
+
+      // "Ta" — quick G4
+      playNote(392, now, 0.18, 0.35);
+      // "Da!" — C5 + E5 + G5 chord (triumphant major triad)
+      playNote(523, now + 0.18, 0.7, 0.35);
+      playNote(659, now + 0.18, 0.7, 0.28);
+      playNote(784, now + 0.18, 0.7, 0.22);
     }
 
     // ── Draw the wheel at a given rotation angle (radians) ──
@@ -411,8 +440,9 @@
       overlayName.style.background = seg.color;
       overlayName.style.color = seg.textColor;
 
-      // 3. Fade in overlay
+      // 3. Fade in overlay and play fanfare
       overlay.classList.add('active');
+      playTada();
 
       // 4. Zoom in overlay content with GSAP Back.easeOut
       gsap.fromTo(
