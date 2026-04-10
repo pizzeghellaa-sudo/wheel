@@ -4,12 +4,195 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wheel of Fortune</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #1a1a2e;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 900px;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      letter-spacing: 2px;
+      color: #e0d7ff;
+    }
+
+    /* ── Game row: wheel + winner panel ── */
+    .game {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Wheel column ── */
+    .wheel-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* ── Pointer triangle ── */
+    .pointer {
+      width: 24px;
+      height: 20px;
+      clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+      margin-bottom: 4px;
+      /* background-color set from CONFIG.pointerColor via JS */
+    }
+
+    canvas#wheel {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* ── Spin button ── */
+    #spinBtn {
+      margin-top: 24px;
+      padding: 12px 36px;
+      border: none;
+      border-radius: 999px;
+      background: #7c3aed;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+    }
+    #spinBtn:hover:not(:disabled) { background: #6d28d9; }
+    #spinBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Winner panel ── */
+    .winner-panel {
+      width: 180px;
+      min-height: 100px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #2a2a4e;
+      transition: background 0.4s, color 0.4s;
+    }
+    #winnerName {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    /* ── Winner overlay ── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 100;
+      transition: opacity 0.3s;
+    }
+    .overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .overlay-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      transform: scale(0);
+    }
+    .overlay-name {
+      font-size: 4rem;
+      font-weight: 900;
+      padding: 16px 40px;
+      border-radius: 16px;
+      /* background and color set from winner segment via JS */
+    }
+    .overlay-label {
+      font-size: 1.4rem;
+      color: #fde68a;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      canvas#wheel { width: 300px; height: 300px; }
+      .winner-panel { width: 140px; min-height: 80px; }
+      #winnerName { font-size: 1.3rem; }
+    }
+  </style>
 </head>
 <body>
-  <p>Scaffold OK</p>
+
+  <div class="page">
+    <h1>Wheel of Fortune</h1>
+    <div class="game">
+
+      <div class="wheel-section">
+        <div class="pointer" id="pointer"></div>
+        <canvas id="wheel" width="500" height="500"></canvas>
+        <button id="spinBtn">SPIN!</button>
+      </div>
+
+      <div class="winner-panel" id="winnerPanel">
+        <span id="winnerName">?</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Winner overlay -->
+  <div class="overlay" id="overlay">
+    <div class="overlay-content" id="overlayContent">
+      <div class="overlay-name" id="overlayName"></div>
+      <div class="overlay-label">🏆 Winner!</div>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script>
-    console.log('GSAP loaded:', typeof gsap !== 'undefined');
+    // ─────────────────────────────────────────────
+    // CONFIG — edit this block to customise the game
+    // ─────────────────────────────────────────────
+    const CONFIG = {
+      segments: [
+        { label: 'Andy',    color: '#a78bfa', textColor: '#1a1a2e' },
+        { label: 'Petro',   color: '#f9a8d4', textColor: '#1a1a2e' },
+        { label: 'Jason',   color: '#fde68a', textColor: '#1a1a2e' },
+        { label: 'Joao',    color: '#86efac', textColor: '#1a1a2e' },
+        { label: 'Matheus', color: '#f87171', textColor: '#ffffff' },
+        { label: 'Robson',  color: '#818cf8', textColor: '#ffffff' },
+        { label: 'Qazi',    color: '#d1a0a0', textColor: '#1a1a2e' },
+        { label: 'Fellipe', color: '#84a98c', textColor: '#ffffff' },
+      ],
+      minSpins:      5,            // minimum full rotations before stopping
+      maxSpins:      10,           // maximum full rotations
+      spinDuration:  4,            // seconds for the spin animation
+      pointerColor:  '#000000',    // color of the pointer triangle
+      spinDirection: 'clockwise',  // 'clockwise' or 'counter-clockwise'
+    };
+    // ─────────────────────────────────────────────
+
+    console.log('CONFIG loaded, segments:', CONFIG.segments.length);
   </script>
 </body>
 </html>
