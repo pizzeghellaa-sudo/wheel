@@ -328,10 +328,53 @@
 
     spinBtn.addEventListener('click', spin);
 
-    // Temporary stub — replaced in Task 5
+    // ── Winner effect ──
+    let dismissTimer = null;
+
     function showWinner(index) {
-      console.log('Winner:', CONFIG.segments[index].label);
+      const seg = CONFIG.segments[index];
+
+      // 1. Update winner panel (right side box)
+      winnerPanel.style.background = seg.color;
+      winnerName.style.color = seg.textColor;
+      winnerName.textContent = seg.label;
+
+      // 2. Populate overlay name card with segment colors
+      overlayName.textContent = seg.label;
+      overlayName.style.background = seg.color;
+      overlayName.style.color = seg.textColor;
+
+      // 3. Fade in overlay
+      overlay.classList.add('active');
+
+      // 4. Zoom in overlay content with GSAP Back.easeOut
+      gsap.fromTo(
+        overlayContent,
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.6, ease: 'back.out(1.7)' }
+      );
+
+      // 5. Auto-dismiss after 4 seconds
+      if (dismissTimer) clearTimeout(dismissTimer);
+      dismissTimer = setTimeout(dismissOverlay, 4000);
     }
+
+    function dismissOverlay() {
+      if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = null; }
+      gsap.to(overlayContent, {
+        scale: 0,
+        opacity: 0,
+        duration: 0.3,
+        ease: 'power2.in',
+        onComplete() {
+          overlay.classList.remove('active');
+          // Reset scale for next time
+          gsap.set(overlayContent, { scale: 0, opacity: 0 });
+        },
+      });
+    }
+
+    overlay.addEventListener('click', dismissOverlay);
   </script>
 </body>
 </html>
