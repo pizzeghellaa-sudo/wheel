@@ -3,7 +3,13 @@
     "allow": [
       "Bash(bash:*)",
       "Bash(git -C \"C:/Data/Developers/wheel\" log --oneline)",
-      "Bash(echo \"exit:$?\")"
+      "Bash(echo \"exit:$?\")",
+      "Bash(git:*)",
+      "Bash(ls:*)",
+      "Bash(node:*)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_console_messages",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot"
     ]
   }
 }
