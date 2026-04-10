@@ -19,7 +19,20 @@ Open `index.html` directly in a browser — no server needed.
 
 ## How to Deploy
 
-Push to GitHub, connect the repo to Vercel. It auto-detects a static site. No build command, no environment variables.
+Push to GitHub, connect the repo to Vercel. No build command, no environment variables.
+
+`vercel.json` must explicitly declare it as a static site — Vercel does **not** auto-detect bare HTML files without this:
+
+```json
+{
+  "framework": null,
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
+```
+
+Without `framework: null` and `outputDirectory: "."`, Vercel returns a `404: NOT_FOUND` on the deployed URL.
 
 ## How to Configure
 
