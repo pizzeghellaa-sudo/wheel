@@ -46,8 +46,8 @@
     #dailyQuote {
       font-family: 'Segoe UI', sans-serif;
       font-style: italic;
-      font-size: clamp(0.85rem, 1.8vmin, 1.15rem);
-      color: #9ca3af;
+      font-size: clamp(1rem, 2.2vmin, 1.4rem);
+      color: var(--accent, #9ca3af);
       text-align: center;
       max-width: min(90vw, 720px);
       line-height: 1.4;
@@ -200,6 +200,7 @@
     // QUOTES — one shown per day, cycles through in order
     // ─────────────────────────────────────────────────
     const QUOTES = [
+      "Success is just surviving the meeting without agreeing to extra work.",
       "Another meeting, because the first one clearly solved nothing.",
       "Great, another email that could have been a sticky note.",
       "Teamwork is just group therapy with deadlines.",
@@ -217,10 +218,8 @@
       "It's not a delay; it's a strategic pause with consequences.",
       "We're agile, which means we'll change direction while staying late.",
       "I love a deadline that arrives before the work does.",
-      "This could have been an email, but then how would we suffer together?",
-      "Productivity is just panic with a spreadsheet.",
-      "We really polished that issue right before ignoring it.",
       "Nothing builds trust like changing the plan every hour.",
+      "We really polished that issue right before ignoring it.",
       "I'm thrilled we scheduled a meeting to discuss scheduling more meetings.",
       "The project is going great, if “great” means “still open.”",
       "Deadlines are just suggestions with consequences.",
@@ -232,13 +231,12 @@
       "I'm not behind; I'm just participating in a slower timeline.",
       "We've reached the stage where nobody knows, but everyone has opinions.",
       "The best part of the process is watching it become more complicated.",
-      "At this point, the spreadsheet deserves a salary.",
       "We are one more “quick update” away from losing the will to live.",
       "A vague request is just a puzzle without the fun.",
       "I appreciate the urgency from people who discovered the issue five minutes ago.",
       "The plan is simple: discuss the problem until it becomes next quarter's problem.",
       "My favorite part of work is when the answer is “let's revisit that.”",
-      "Success is just surviving the meeting without agreeing to extra work.",
+      "Productivity is just panic with a spreadsheet.",
     ];
 
     // CONFIG — edit this block to customise the game

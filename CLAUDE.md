@@ -36,6 +36,8 @@ Without `framework: null` and `outputDirectory: "."`, Vercel returns a `404: NOT
 
 ## How to Configure
 
+The `QUOTES` array (39 entries, above `CONFIG` in the script block) holds the daily rotating sentences shown under the title. One is picked deterministically by local calendar day (`localDayIndex % 39`), so it cycles every ~39 days.
+
 Edit only the `CONFIG` object at the top of the `<script>` block in `index.html`:
 
 ```js
@@ -61,12 +63,13 @@ Each segment:
 
 Everything is in `index.html`. The script block is structured as:
 
-1. `CONFIG` — the only block users need to touch
-2. DOM refs — all element references captured once on load
-3. `mod(a, n)` — positive modulo helper (used in spin angle math)
-4. `drawWheel(angle)` — Canvas 2D rendering function, called every animation frame
-5. `spin()` — picks winner, computes target angle, runs GSAP tween
-6. `showWinner(index)` + `dismissOverlay()` — winner overlay logic
+1. `QUOTES` — 39 daily rotating sentences (deterministic by local date)
+2. `CONFIG` — the only block users need to touch
+3. DOM refs — all element references captured once on load
+4. `mod(a, n)` — positive modulo helper (used in spin angle math)
+5. `drawWheel(angle)` — Canvas 2D rendering function, called every animation frame
+6. `spin()` — picks winner, computes target angle, runs GSAP tween
+7. `showWinner(index)` + `dismissOverlay()` — winner overlay logic
 
 ## Key Implementation Details
 
