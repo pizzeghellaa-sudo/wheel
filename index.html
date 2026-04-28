@@ -39,8 +39,19 @@
       font-weight: 400;
       font-size: clamp(1.4rem, 4vmin, 3rem);
       letter-spacing: 2px;
-      margin-bottom: clamp(12px, 3vmin, 50px);
+      margin-bottom: clamp(4px, 1vmin, 10px);
       /* color set randomly via JS on load */
+    }
+
+    #dailyQuote {
+      font-family: 'Segoe UI', sans-serif;
+      font-style: italic;
+      font-size: clamp(0.85rem, 1.8vmin, 1.15rem);
+      color: #9ca3af;
+      text-align: center;
+      max-width: min(90vw, 720px);
+      line-height: 1.4;
+      margin: 0 0 clamp(12px, 3vmin, 40px) 0;
     }
 
     /* ── Game row: wheel centered ── */
@@ -160,6 +171,7 @@
 
   <div class="page">
     <h1 id="pageTitle">Wheel of Fortune</h1>
+    <p id="dailyQuote"></p>
     <div class="game">
 
       <div class="wheel-section">
@@ -185,6 +197,50 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script>
     // ─────────────────────────────────────────────
+    // QUOTES — one shown per day, cycles through in order
+    // ─────────────────────────────────────────────────
+    const QUOTES = [
+      "Another meeting, because the first one clearly solved nothing.",
+      "Great, another email that could have been a sticky note.",
+      "Teamwork is just group therapy with deadlines.",
+      "Nothing says productivity like a 47-minute discussion about the subject line.",
+      "I'm not saying we move slowly, but the coffee gets cold twice.",
+      "Efficiency is just procrastination with better branding.",
+      "The calendar is full, so naturally the work is still waiting.",
+      "Let's circle back, because apparently forward was too ambitious.",
+      "Synergy: when everyone agrees to be confused together.",
+      "Urgent, as always, which is corporate for “we forgot.”",
+      "Let's touch base, because apparently solving it was optional.",
+      "Another “quick call,” which is office code for “say less, do more.”",
+      "Nothing boosts morale like a meeting invite with no agenda.",
+      "The fastest way to get something done is to ask three people not to do it.",
+      "It's not a delay; it's a strategic pause with consequences.",
+      "We're agile, which means we'll change direction while staying late.",
+      "I love a deadline that arrives before the work does.",
+      "This could have been an email, but then how would we suffer together?",
+      "Productivity is just panic with a spreadsheet.",
+      "We really polished that issue right before ignoring it.",
+      "Nothing builds trust like changing the plan every hour.",
+      "I'm thrilled we scheduled a meeting to discuss scheduling more meetings.",
+      "The project is going great, if “great” means “still open.”",
+      "Deadlines are just suggestions with consequences.",
+      "This is not a fire drill, but everyone is acting like it is.",
+      "We didn't solve the problem, but we did create a very nice folder for it.",
+      "I love being told something is easy by someone not doing it.",
+      "The workflow is efficient, if your goal is confusion.",
+      "Another revision? Fantastic, because the last twelve were clearly too stable.",
+      "I'm not behind; I'm just participating in a slower timeline.",
+      "We've reached the stage where nobody knows, but everyone has opinions.",
+      "The best part of the process is watching it become more complicated.",
+      "At this point, the spreadsheet deserves a salary.",
+      "We are one more “quick update” away from losing the will to live.",
+      "A vague request is just a puzzle without the fun.",
+      "I appreciate the urgency from people who discovered the issue five minutes ago.",
+      "The plan is simple: discuss the problem until it becomes next quarter's problem.",
+      "My favorite part of work is when the answer is “let's revisit that.”",
+      "Success is just surviving the meeting without agreeing to extra work.",
+    ];
+
     // CONFIG — edit this block to customise the game
     // ─────────────────────────────────────────────
     const CONFIG = {
@@ -223,6 +279,10 @@
     const _d = new Date();
     document.getElementById('pageTitle').textContent =
       `Wheel of Fortune of ${_d.getMonth() + 1}/${_d.getDate()}/${_d.getFullYear()}`;
+
+    // Daily quote — deterministic by local calendar day, rotates at local midnight
+    const _localDay = Math.floor((_d.getTime() - _d.getTimezoneOffset() * 60000) / 86400000);
+    document.getElementById('dailyQuote').textContent = QUOTES[_localDay % QUOTES.length];
 
     // Random bright clear color for the title (high saturation + lightness for dark bg)
     const _hue = Math.floor(Math.random() * 360);
